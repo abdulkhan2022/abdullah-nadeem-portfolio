@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abdullah Nadeem — Interior Designer & 3D Visualizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --warm-white: #FAF8F4;
+    --charcoal: #1C1A17;
+    --brown: #6B4E35;
+    --gold: #B8924A;
+    --gold-light: #D4AA6A;
+    --muted: #8A8070;
+    --border: rgba(107,78,53,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--charcoal);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), opacity 0.3s;
+    opacity: 0.6;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    mix-blend-mode: multiply;
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--charcoal);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+  }
+  .nav-links a:hover { opacity: 1; }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    padding: 160px 60px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(56px, 7vw, 96px);
+    font-weight: 300;
+    line-height: 0.95;
+    color: var(--charcoal);
+    margin-bottom: 32px;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--brown);
+  }
+  .hero-bio {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 420px;
+    margin-bottom: 48px;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .btn-primary {
+    padding: 14px 36px;
+    background: var(--charcoal);
+    color: var(--cream);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--brown); transform: translateY(-2px); }
+  .btn-ghost {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.6;
+    transition: opacity 0.3s, gap 0.3s;
+  }
+  .btn-ghost:hover { opacity: 1; gap: 14px; }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-image-container {
+    position: absolute;
+    inset: 0;
+    background: var(--cream);
+  }
+  .hero-grid-visual {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 2fr 1fr;
+    gap: 4px;
+    padding: 4px;
+  }
+  .hero-cell {
+    overflow: hidden;
+    position: relative;
+    background: var(--cream);
+  }
+  .hero-cell-1 {
+    grid-row: 1 / 3;
+    background: linear-gradient(160deg, #E8DDD0 0%, #C9B89A 100%);
+  }
+  .hero-cell-2 { background: linear-gradient(160deg, #D4C5B0 0%, #A8896B 100%); }
+  .hero-cell-3 { background: linear-gradient(160deg, #E0D4C4 0%, #B89E82 100%); }
+
+  .hero-cell svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.15;
+  }
+
+  /* Architectural line drawing on hero cells */
+  .arch-lines {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .arch-lines svg { opacity: 0.2; }
+
+  .hero-scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    right: 60px;
+    writing-mode: vertical-rl;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 2;
+  }
+  .hero-scroll-indicator::after {
+    content: '';
+    width: 1px;
+    height: 60px;
+    background: var(--gold);
+    animation: scrollLine 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: scaleY(1); transform-origin: top; opacity: 0.3; }
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    background: var(--charcoal);
+    padding: 28px 60px;
+    display: flex;
+    gap: 80px;
+    align-items: center;
+  }
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+  .stats-divider {
+    width: 1px;
+    height: 48px;
+    background: rgba(255,255,255,0.1);
+  }
+  .stats-tagline {
+    margin-left: auto;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: rgba(255,255,255,0.5);
+    max-width: 300px;
+    text-align: right;
+  }
+
+  /* Services */
+  .section { padding: 120px 60px; }
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 80px;
+  }
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 300;
+    line-height: 1.1;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--brown);
+  }
+  .section-link {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--charcoal);
+    padding-bottom: 4px;
+    transition: gap 0.3s;
+  }
+  .section-link:hover { gap: 16px; }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+  .service-card {
+    padding: 48px 32px;
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+    cursor: none;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px;
+    width: 0;
+    background: var(--gold);
+    transition: width 0.4s cubic-bezier(0.23,1,0.32,1);
+  }
+  .service-card:hover::before { width: 100%; }
+  .service-card:hover { background: #EDE5D8; }
+
+  .service-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    font-weight: 300;
+    color: rgba(107,78,53,0.1);
+    line-height: 1;
+    margin-bottom: 32px;
+  }
+  .service-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 20px;
+    color: var(--gold);
+  }
+  .service-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .service-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* Portfolio */
+  .portfolio-section {
+    padding: 120px 0;
+    background: var(--cream);
+  }
+  .portfolio-header {
+    padding: 0 60px;
+    margin-bottom: 60px;
+  }
+  .portfolio-filter {
+    display: flex;
+    gap: 4px;
+    margin-top: 32px;
+  }
+  .filter-btn {
+    padding: 10px 24px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: transparent;
+    cursor: none;
+    transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--charcoal);
+    color: var(--cream);
+    border-color: var(--charcoal);
+  }
+
+  .portfolio-masonry {
+    padding: 0 60px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .portfolio-item {
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+  }
+  .portfolio-item:nth-child(1) { grid-row: span 2; }
+  .portfolio-item:nth-child(4) { grid-row: span 2; }
+
+  .portfolio-visual {
+    width: 100%;
+    padding-top: 75%;
+    position: relative;
+    overflow: hidden;
+  }
+  .portfolio-item:nth-child(1) .portfolio-visual,
+  .portfolio-item:nth-child(4) .portfolio-visual {
+    padding-top: 150%;
+  }
+
+  .portfolio-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.6s cubic-bezier(0.23,1,0.32,1);
+  }
+  .portfolio-item:hover .portfolio-bg { transform: scale(1.05); }
+
+  .p1 { background: linear-gradient(135deg, #C4B49E 0%, #8B6E52 50%, #5C4230 100%); }
+  .p2 { background: linear-gradient(135deg, #B8C9D4 0%, #7A9EB0 50%, #4A7285 100%); }
+  .p3 { background: linear-gradient(135deg, #D4C8B8 0%, #A89070 50%, #6B5038 100%); }
+  .p4 { background: linear-gradient(135deg, #C9D4CA 0%, #8AAE8E 50%, #4A6E4E 100%); }
+  .p5 { background: linear-gradient(135deg, #D4C4B8 0%, #B08870 50%, #7A5040 100%); }
+  .p6 { background: linear-gradient(135deg, #C8C4D4 0%, #9088B0 50%, #5A5080 100%); }
+
+  /* Architectural room sketch overlay */
+  .room-sketch {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.12;
+  }
+  .room-sketch svg { width: 80%; height: 80%; }
+
+  .portfolio-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(28,26,23,0.9) 0%, transparent 60%);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+  .portfolio-cat {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .portfolio-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: white;
+  }
+
+  /* About / Process */
+  .about-section {
+    padding: 120px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  .about-visual {
+    position: relative;
+  }
+  .about-image-frame {
+    width: 100%;
+    padding-top: 120%;
+    background: linear-gradient(160deg, #DDD0C0 0%, #A8896B 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .about-image-frame::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: 20px;
+    bottom: 20px;
+    border: 1px solid var(--gold);
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .about-accent {
+    position: absolute;
+    bottom: -30px;
+    right: -30px;
+    width: 200px;
+    height: 200px;
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 3;
+  }
+  .accent-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1;
+  }
+  .accent-text {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+  }
+  .about-text {
+    padding-right: 20px;
+  }
+  .about-bio {
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .about-skills {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 40px;
+  }
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--charcoal);
+  }
+  .skill-item::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* Process */
+  .process-section {
+    padding: 120px 60px;
+    background: var(--charcoal);
+  }
+  .process-section .section-title { color: white; }
+  .process-section .section-tag { color: var(--gold); }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin-top: 80px;
+    background: rgba(255,255,255,0.05);
+  }
+  .process-step {
+    padding: 48px 32px;
+    background: var(--charcoal);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .process-step:hover { background: #2C2A27; }
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px;
+    font-weight: 300;
+    color: rgba(184,146,74,0.1);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+  .step-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: white;
+    margin-bottom: 12px;
+  }
+  .step-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.35);
+  }
+
+  /* Testimonial */
+  .testimonial-section {
+    padding: 120px 60px;
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .quote-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 120px;
+    line-height: 0.5;
+    color: var(--gold);
+    opacity: 0.3;
+    margin-bottom: 32px;
+  }
+  .testimonial-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(24px, 3vw, 40px);
+    font-weight: 300;
+    font-style: italic;
+    max-width: 800px;
+    line-height: 1.5;
+    color: var(--charcoal);
+    margin-bottom: 40px;
+  }
+  .testimonial-author {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .testimonial-dots {
+    display: flex;
+    gap: 8px;
+    margin-top: 40px;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: none;
+    transition: background 0.3s;
+  }
+  .dot.active { background: var(--gold); }
+
+  /* Contact */
+  .contact-section {
+    padding: 120px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: start;
+  }
+  .contact-form-group {
+    margin-bottom: 24px;
+  }
+  .contact-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .contact-input {
+    width: 100%;
+    padding: 14px 0;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--charcoal);
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .contact-input:focus { border-color: var(--gold); }
+  textarea.contact-input { resize: none; height: 100px; }
+  .contact-submit {
+    margin-top: 16px;
+    padding: 16px 48px;
+    background: var(--charcoal);
+    color: var(--cream);
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .contact-submit:hover { background: var(--brown); transform: translateY(-2px); }
+  .contact-info-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .contact-info-title em { font-style: italic; color: var(--brown); }
+  .contact-info-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 48px;
+  }
+  .contact-details { display: flex; flex-direction: column; gap: 20px; }
+  .contact-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .detail-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .detail-value {
+    font-size: 15px;
+    color: var(--charcoal);
+  }
+
+  /* Footer */
+  footer {
+    background: var(--charcoal);
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: white;
+    font-weight: 300;
+  }
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+  }
+  .footer-socials { display: flex; gap: 24px; }
+  .footer-socials a {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-socials a:hover { color: var(--gold); }
+
+  /* Animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.23,1,0.32,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* Horizontal marquee */
+  .marquee-wrap {
+    overflow: hidden;
+    padding: 20px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    white-space: nowrap;
+    animation: marquee 20s linear infinite;
+  }
+  .marquee-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--muted);
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .marquee-item::after {
+    content: '◆';
+    font-size: 8px;
+    color: var(--gold);
+    font-style: normal;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* CTA Banner */
+  .cta-banner {
+    padding: 100px 60px;
+    background: var(--brown);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    position: relative;
+  }
+  .cta-banner::before {
+    content: 'AN';
+    position: absolute;
+    right: -40px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 400px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .cta-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 300;
+    color: white;
+    line-height: 1.2;
+  }
+  .cta-text em { font-style: italic; }
+  .btn-white {
+    padding: 16px 48px;
+    background: white;
+    color: var(--brown);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .btn-white:hover { background: var(--cream); transform: translateY(-2px); }
+
+  /* Dev credit banner */
+  .dev-banner {
+    background: #F5F0E8;
+    border-top: 2px solid var(--gold);
+    padding: 20px 60px;
+    text-align: center;
+  }
+  .dev-banner p {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .dev-banner strong {
+    color: var(--charcoal);
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- Nav -->
+<nav>
+  <a href="#" class="nav-logo">Abdullah Nadeem</a>
+  <ul class="nav-links">
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag reveal">Karachi, Pakistan — Est. 2018</div>
+    <h1 class="hero-name reveal reveal-delay-1">
+      Spaces<br>that <em>Speak</em><br>to the Soul
+    </h1>
+    <p class="hero-bio reveal reveal-delay-2">
+      Interior Designer, 3D Visualizer & Architecture Consultant specializing in transforming commercial and residential spaces into experiences that resonate with human needs and environmental context.
+    </p>
+    <div class="hero-cta reveal reveal-delay-3">
+      <a href="#portfolio" class="btn-primary">View Portfolio</a>
+      <a href="#contact" class="btn-ghost">Start a Project →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-image-container">
+      <div class="hero-grid-visual">
+        <div class="hero-cell hero-cell-1">
+          <div class="arch-lines">
+            <svg viewBox="0 0 200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="80" width="160" height="240" stroke="white" stroke-width="1"/>
+              <line x1="20" y1="160" x2="180" y2="160" stroke="white" stroke-width="0.5"/>
+              <rect x="70" y="200" width="60" height="80" stroke="white" stroke-width="0.5"/>
+              <line x1="100" y1="80" x2="100" y2="20" stroke="white" stroke-width="0.5"/>
+              <line x1="20" y1="20" x2="180" y2="20" stroke="white" stroke-width="0.5"/>
+              <line x1="40" y1="80" x2="20" y2="20" stroke="white" stroke-width="0.5"/>
+              <line x1="160" y1="80" x2="180" y2="20" stroke="white" stroke-width="0.5"/>
+              <rect x="30" y="100" width="40" height="50" stroke="white" stroke-width="0.5"/>
+              <rect x="130" y="100" width="40" height="50" stroke="white" stroke-width="0.5"/>
+            </svg>
+          </div>
+        </div>
+        <div class="hero-cell hero-cell-2">
+          <div class="arch-lines">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="20" width="160" height="160" stroke="white" stroke-width="1"/>
+              <line x1="20" y1="100" x2="180" y2="100" stroke="white" stroke-width="0.5"/>
+              <line x1="100" y1="20" x2="100" y2="180" stroke="white" stroke-width="0.5"/>
+              <circle cx="100" cy="100" r="40" stroke="white" stroke-width="0.5"/>
+            </svg>
+          </div>
+        </div>
+        <div class="hero-cell hero-cell-3">
+          <div class="arch-lines">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="100,20 180,180 20,180" stroke="white" stroke-width="1" fill="none"/>
+              <line x1="60" y1="140" x2="140" y2="140" stroke="white" stroke-width="0.5"/>
+              <line x1="80" y1="100" x2="120" y2="100" stroke="white" stroke-width="0.5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-indicator">Scroll</div>
+  </div>
+</section>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">50+</div>
+    <div class="stat-label">Projects Completed</div>
+  </div>
+  <div class="stats-divider"></div>
+  <div class="stat-item">
+    <div class="stat-num">6+</div>
+    <div class="stat-label">Years Experience</div>
+  </div>
+  <div class="stats-divider"></div>
+  <div class="stat-item">
+    <div class="stat-num">4</div>
+    <div class="stat-label">Core Services</div>
+  </div>
+  <div class="stats-divider"></div>
+  <div class="stat-item">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">Client Satisfaction</div>
+  </div>
+  <div class="stats-tagline">Designing spaces that endure, inspire, and belong.</div>
+</div>
+
+<!-- Marquee -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marquee">
+    <span class="marquee-item">Interior Design</span>
+    <span class="marquee-item">3D Visualization</span>
+    <span class="marquee-item">Architecture Consulting</span>
+    <span class="marquee-item">Exterior Design</span>
+    <span class="marquee-item">Residential Projects</span>
+    <span class="marquee-item">Commercial Spaces</span>
+    <span class="marquee-item">Luxury Villas</span>
+    <span class="marquee-item">High-Rise Buildings</span>
+    <span class="marquee-item">Interior Design</span>
+    <span class="marquee-item">3D Visualization</span>
+    <span class="marquee-item">Architecture Consulting</span>
+    <span class="marquee-item">Exterior Design</span>
+    <span class="marquee-item">Residential Projects</span>
+    <span class="marquee-item">Commercial Spaces</span>
+    <span class="marquee-item">Luxury Villas</span>
+    <span class="marquee-item">High-Rise Buildings</span>
+  </div>
+</div>
+
+<!-- Services -->
+<section class="section" id="services">
+  <div class="section-header">
+    <div>
+      <div class="section-tag reveal">What I Do</div>
+      <h2 class="section-title reveal reveal-delay-1">Crafting <em>Excellence</em><br>in Every Detail</h2>
+    </div>
+    <a href="#contact" class="section-link reveal">All Services →</a>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <svg class="service-icon" viewBox="0 0 40 40" fill="none">
+        <rect x="5" y="10" width="30" height="22" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="5" y1="18" x2="35" y2="18" stroke="currentColor" stroke-width="1"/>
+        <rect x="14" y="22" width="12" height="10" stroke="currentColor" stroke-width="1"/>
+      </svg>
+      <div class="service-title">Interior Design</div>
+      <div class="service-desc">Transforming interiors with a blend of contemporary and traditional design principles, tailored to your lifestyle and vision.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">02</div>
+      <svg class="service-icon" viewBox="0 0 40 40" fill="none">
+        <polygon points="20,5 35,32 5,32" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <line x1="12" y1="24" x2="28" y2="24" stroke="currentColor" stroke-width="1"/>
+        <rect x="15" y="24" width="10" height="8" stroke="currentColor" stroke-width="1"/>
+      </svg>
+      <div class="service-title">Exterior Design</div>
+      <div class="service-desc">Creating striking architectural facades that make a statement while harmonizing with their surrounding environment.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">03</div>
+      <svg class="service-icon" viewBox="0 0 40 40" fill="none">
+        <rect x="8" y="8" width="24" height="24" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="13" y="13" width="14" height="14" stroke="currentColor" stroke-width="1"/>
+        <line x1="8" y1="20" x2="13" y2="20" stroke="currentColor" stroke-width="1"/>
+        <line x1="27" y1="20" x2="32" y2="20" stroke="currentColor" stroke-width="1"/>
+        <line x1="20" y1="8" x2="20" y2="13" stroke="currentColor" stroke-width="1"/>
+        <line x1="20" y1="27" x2="20" y2="32" stroke="currentColor" stroke-width="1"/>
+      </svg>
+      <div class="service-title">3D Visualization</div>
+      <div class="service-desc">Bringing designs to life with photorealistic 3D renders, walkthroughs, and animations before construction begins.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-num">04</div>
+      <svg class="service-icon" viewBox="0 0 40 40" fill="none">
+        <line x1="8" y1="32" x2="32" y2="32" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="8" y1="8" x2="8" y2="32" stroke="currentColor" stroke-width="1.5"/>
+        <polyline points="8,28 16,18 22,24 30,12" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <circle cx="30" cy="12" r="2" stroke="currentColor" stroke-width="1" fill="none"/>
+      </svg>
+      <div class="service-title">Detailed Drafting</div>
+      <div class="service-desc">Precise technical drawings and architectural plans that serve as the foundation for flawless execution and construction.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Portfolio -->
+<section class="portfolio-section" id="portfolio">
+  <div class="portfolio-header">
+    <div class="section-tag reveal">Selected Work</div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+      <h2 class="section-title reveal reveal-delay-1">A Portfolio of<br><em>Transformative</em> Spaces</h2>
+    </div>
+    <div class="portfolio-filter reveal reveal-delay-2">
+      <button class="filter-btn active" onclick="filterPortfolio(this,'all')">All</button>
+      <button class="filter-btn" onclick="filterPortfolio(this,'residential')">Residential</button>
+      <button class="filter-btn" onclick="filterPortfolio(this,'commercial')">Commercial</button>
+      <button class="filter-btn" onclick="filterPortfolio(this,'visualization')">3D Visualization</button>
+    </div>
+  </div>
+  <div class="portfolio-masonry">
+    <div class="portfolio-item" data-cat="residential">
+      <div class="portfolio-visual">
+        <div class="portfolio-bg p1">
+          <div class="room-sketch">
+            <svg viewBox="0 0 300 400" fill="none">
+              <rect x="20" y="60" width="260" height="280" stroke="white" stroke-width="1.5"/>
+              <line x1="20" y1="220" x2="280" y2="220" stroke="white" stroke-width="0.8"/>
+              <rect x="100" y="270" width="100" height="70" stroke="white" stroke-width="1"/>
+              <rect x="40" y="80" width="80" height="60" stroke="white" stroke-width="0.8"/>
+              <line x1="40" y1="110" x2="120" y2="110" stroke="white" stroke-width="0.5"/>
+              <rect x="180" y="80" width="80" height="60" stroke="white" stroke-width="0.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="portfolio-overlay">
+          <div class="portfolio-cat">Residential · Interior</div>
+          <div class="portfolio-name">Luxury Villa — DHA Phase VI</div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item" data-cat="commercial">
+      <div class="portfolio-visual">
+        <div class="portfolio-bg p2">
+          <div class="room-sketch">
+            <svg viewBox="0 0 300 200" fill="none">
+              <rect x="20" y="20" width="260" height="160" stroke="white" stroke-width="1.5"/>
+              <line x1="100" y1="20" x2="100" y2="180" stroke="white" stroke-width="0.8"/>
+              <line x1="200" y1="20" x2="200" y2="180" stroke="white" stroke-width="0.8"/>
+              <rect x="110" y="80" width="80" height="40" stroke="white" stroke-width="0.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="portfolio-overlay">
+          <div class="portfolio-cat">Commercial · Restaurant</div>
+          <div class="portfolio-name">Urban Bistro — Clifton</div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item" data-cat="visualization">
+      <div class="portfolio-visual">
+        <div class="portfolio-bg p3">
+          <div class="room-sketch">
+            <svg viewBox="0 0 300 200" fill="none">
+              <polygon points="150,10 280,180 20,180" stroke="white" stroke-width="1.5" fill="none"/>
+              <line x1="80" y1="140" x2="220" y2="140" stroke="white" stroke-width="0.8"/>
+              <rect x="110" y="140" width="80" height="40" stroke="white" stroke-width="0.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="portfolio-overlay">
+          <div class="portfolio-cat">3D Visualization</div>
+          <div class="portfolio-name">Contemporary Office Tower</div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item" data-cat="commercial">
+      <div class="portfolio-visual">
+        <div class="portfolio-bg p4">
+          <div class="room-sketch">
+            <svg viewBox="0 0 300 400" fill="none">
+              <rect x="20" y="20" width="260" height="360" stroke="white" stroke-width="1.5"/>
+              <line x1="20" y1="120" x2="280" y2="120" stroke="white" stroke-width="0.8"/>
+              <line x1="20" y1="220" x2="280" y2="220" stroke="white" stroke-width="0.8"/>
+              <line x1="20" y1="320" x2="280" y2="320" stroke="white" stroke-width="0.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="portfolio-overlay">
+          <div class="portfolio-cat">Commercial · Retail</div>
+          <div class="portfolio-name">Boutique Store — Zamzama</div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item" data-cat="residential">
+      <div class="portfolio-visual">
+        <div class="portfolio-bg p5">
+          <div class="room-sketch">
+            <svg viewBox="0 0 300 200" fill="none">
+              <rect x="40" y="40" width="220" height="140" stroke="white" stroke-width="1.5"/>
+              <line x1="40" y1="100" x2="260" y2="100" stroke="white" stroke-width="0.8"/>
+              <circle cx="150" cy="70" r="20" stroke="white" stroke-width="0.8" fill="none"/>
+            </svg>
+          </div>
+        </div>
+        <div class="portfolio-overlay">
+          <div class="portfolio-cat">Residential · Master Bedroom</div>
+          <div class="portfolio-name">Serene Suite — Defence</div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item" data-cat="visualization">
+      <div class="portfolio-visual">
+        <div class="portfolio-bg p6">
+          <div class="room-sketch">
+            <svg viewBox="0 0 300 200" fill="none">
+              <rect x="20" y="60" width="260" height="120" stroke="white" stroke-width="1.5"/>
+              <line x1="20" y1="60" x2="150" y2="20" stroke="white" stroke-width="1"/>
+              <line x1="280" y1="60" x2="150" y2="20" stroke="white" stroke-width="1"/>
+            </svg>
+          </div>
+        </div>
+        <div class="portfolio-overlay">
+          <div class="portfolio-cat">Architecture · Exterior</div>
+          <div class="portfolio-name">High-Rise Concept — Karachi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about-section" id="about">
+  <div class="about-visual reveal">
+    <div class="about-image-frame">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 280 340" width="70%" fill="none" opacity="0.2">
+          <rect x="20" y="40" width="240" height="260" stroke="white" stroke-width="2"/>
+          <line x1="20" y1="130" x2="260" y2="130" stroke="white" stroke-width="1"/>
+          <rect x="90" y="200" width="100" height="100" stroke="white" stroke-width="1"/>
+          <rect x="40" y="60" width="70" height="55" stroke="white" stroke-width="1"/>
+          <rect x="170" y="60" width="70" height="55" stroke="white" stroke-width="1"/>
+          <line x1="140" y1="40" x2="140" y2="5" stroke="white" stroke-width="1"/>
+          <line x1="80" y1="5" x2="200" y2="5" stroke="white" stroke-width="1"/>
+          <line x1="80" y1="5" x2="40" y2="40" stroke="white" stroke-width="1"/>
+          <line x1="200" y1="5" x2="240" y2="40" stroke="white" stroke-width="1"/>
+        </svg>
+      </div>
+    </div>
+    <div class="about-accent">
+      <div class="accent-num">6+</div>
+      <div class="accent-text">Years of<br>Experience</div>
+    </div>
+  </div>
+  <div class="about-text">
+    <div class="section-tag reveal">About Me</div>
+    <h2 class="section-title reveal reveal-delay-1">Designing with<br>Purpose & <em>Passion</em></h2>
+    <p class="about-bio reveal reveal-delay-2">
+      I'm Abdullah Nadeem, an Interior Designer and 3D Visualizer based in Karachi. My journey began in Environmental Design, driven by a fundamental question: how do we transform buildings and spaces to be more resilient to climate change and responsive to their context?
+    </p>
+    <p class="about-bio reveal reveal-delay-2">
+      At Darban Collaborative, I blend creative innovation with practical solutions — whether crafting expansive residences, luxury villas, dynamic restaurants, or efficient office environments. Every project exceeds expectations.
+    </p>
+    <div class="about-skills reveal reveal-delay-3">
+      <div class="skill-item">High-Rise Buildings</div>
+      <div class="skill-item">Interior Design</div>
+      <div class="skill-item">Exterior Design</div>
+      <div class="skill-item">3D Modeling & Rendering</div>
+      <div class="skill-item">Animation & Walkthroughs</div>
+      <div class="skill-item">Detailed Drafting</div>
+    </div>
+  </div>
+</section>
+
+<!-- Process -->
+<section class="process-section">
+  <div class="section-tag">How I Work</div>
+  <h2 class="section-title">The Design <em style="color:var(--gold-light);font-style:italic">Journey</em></h2>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="step-num">01</div>
+      <div class="step-title">Discovery & Briefing</div>
+      <div class="step-desc">Deep conversations to understand your vision, lifestyle, functional needs, and aesthetic aspirations for the space.</div>
+    </div>
+    <div class="process-step reveal reveal-delay-1">
+      <div class="step-num">02</div>
+      <div class="step-title">Concept Development</div>
+      <div class="step-desc">Creating initial mood boards, spatial layouts, and design concepts that translate your vision into tangible ideas.</div>
+    </div>
+    <div class="process-step reveal reveal-delay-2">
+      <div class="step-num">03</div>
+      <div class="step-title">3D Visualization</div>
+      <div class="step-desc">Photorealistic renders and walkthroughs that let you experience the space before a single brick is laid.</div>
+    </div>
+    <div class="process-step reveal reveal-delay-3">
+      <div class="step-num">04</div>
+      <div class="step-title">Delivery & Beyond</div>
+      <div class="step-desc">Technical drawings, material schedules, and ongoing support through execution to ensure perfect realization.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonial -->
+<section class="testimonial-section">
+  <div class="quote-mark">"</div>
+  <p class="testimonial-text" id="testimonial-text">
+    Abdullah transformed our home into something truly extraordinary. His attention to detail and ability to balance aesthetics with functionality is unlike anything we've experienced.
+  </p>
+  <div class="testimonial-author" id="testimonial-author">— Nadia Khan, Residential Client · DHA Karachi</div>
+  <div class="testimonial-dots">
+    <div class="dot active" onclick="showTestimonial(0)"></div>
+    <div class="dot" onclick="showTestimonial(1)"></div>
+    <div class="dot" onclick="showTestimonial(2)"></div>
+  </div>
+</section>
+
+<!-- CTA Banner -->
+<div class="cta-banner">
+  <div class="cta-text">
+    Ready to Transform<br><em>Your Space?</em>
+  </div>
+  <a href="#contact" class="btn-white">Let's Collaborate</a>
+</div>
+
+<!-- Contact -->
+<section class="contact-section" id="contact">
+  <div>
+    <div class="contact-info-title reveal">
+      Let's Create<br>Something <em>Beautiful</em><br>Together
+    </div>
+    <p class="contact-info-text reveal reveal-delay-1">
+      Whether you have a project in mind or just want to explore possibilities, I'd love to hear from you. Every great space begins with a conversation.
+    </p>
+    <div class="contact-details reveal reveal-delay-2">
+      <div class="contact-detail">
+        <span class="detail-label">Location</span>
+        <span class="detail-value">Karachi, Pakistan</span>
+      </div>
+      <div class="contact-detail">
+        <span class="detail-label">Availability</span>
+        <span class="detail-value">Open for Freelance Projects</span>
+      </div>
+      <div class="contact-detail">
+        <span class="detail-label">Company</span>
+        <span class="detail-value">Darban Collaborative</span>
+      </div>
+      <div class="contact-detail">
+        <span class="detail-label">Portfolio</span>
+        <span class="detail-value">behance.net/abdullahnadeem13</span>
+      </div>
+    </div>
+  </div>
+  <div class="reveal reveal-delay-1">
+    <div class="contact-form-group">
+      <label class="contact-label">Your Name</label>
+      <input type="text" class="contact-input" placeholder="Ahmed Ali">
+    </div>
+    <div class="contact-form-group">
+      <label class="contact-label">Email Address</label>
+      <input type="email" class="contact-input" placeholder="ahmed@email.com">
+    </div>
+    <div class="contact-form-group">
+      <label class="contact-label">Project Type</label>
+      <input type="text" class="contact-input" placeholder="Residential Interior / Commercial / 3D Visualization">
+    </div>
+    <div class="contact-form-group">
+      <label class="contact-label">Tell Me About Your Project</label>
+      <textarea class="contact-input" placeholder="Describe your vision, space, and timeline..."></textarea>
+    </div>
+    <button class="contact-submit" onclick="handleSubmit()">Send Message →</button>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">Abdullah Nadeem</div>
+  <div class="footer-copy">© 2025 Abdullah Nadeem · Interior Designer · Karachi</div>
+  <div class="footer-socials">
+    <a href="https://www.behance.net/abdullahnadeem13" target="_blank">Behance</a>
+    <a href="#" target="_blank">LinkedIn</a>
+    <a href="#" target="_blank">Instagram</a>
+  </div>
+</footer>
+
+<!-- Dev Credit -->
+<div class="dev-banner">
+  <p>✦ <strong>Website Concept</strong> — Designed & Developed by <strong>Abdul Rahman Khan</strong> · Available for Full Development</p>
+</div>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
+  });
+  function animateRing() {
+    rx += (mx - rx - 18) * 0.12;
+    ry += (my - ry - 18) * 0.12;
+    ring.style.transform = `translate(${rx}px, ${ry}px)`;
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a, button, .filter-btn, .dot').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform += ' scale(2)'; ring.style.opacity = '1'; });
+    el.addEventListener('mouseleave', () => { ring.style.opacity = '0.6'; });
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => obs.observe(el));
+
+  // Portfolio filter
+  function filterPortfolio(btn, cat) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.portfolio-item').forEach(item => {
+      if (cat === 'all' || item.dataset.cat === cat) {
+        item.style.opacity = '1';
+        item.style.transform = 'none';
+      } else {
+        item.style.opacity = '0.2';
+        item.style.transform = 'scale(0.97)';
+      }
+      item.style.transition = 'opacity 0.4s, transform 0.4s';
+    });
+  }
+
+  // Testimonials
+  const testimonials = [
+    { text: "Abdullah transformed our home into something truly extraordinary. His attention to detail and ability to balance aesthetics with functionality is unlike anything we've experienced.", author: "— Nadia Khan, Residential Client · DHA Karachi" },
+    { text: "The 3D visualizations he created for our restaurant gave us complete confidence before we invested. The final result matched perfectly — our guests always comment on the atmosphere.", author: "— Bilal Raza, Restaurant Owner · Clifton" },
+    { text: "Working with Abdullah felt like working with someone who genuinely cared about our vision. He brought ideas we hadn't even imagined and elevated the entire project.", author: "— Sara Hussain, Commercial Client · Karachi" }
+  ];
+  function showTestimonial(idx) {
+    const el = document.getElementById('testimonial-text');
+    const auth = document.getElementById('testimonial-author');
+    el.style.opacity = '0'; el.style.transform = 'translateY(10px)';
+    setTimeout(() => {
+      el.textContent = testimonials[idx].text;
+      auth.textContent = testimonials[idx].author;
+      el.style.transition = 'opacity 0.5s, transform 0.5s';
+      el.style.opacity = '1'; el.style.transform = 'none';
+    }, 300);
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+  }
+  // Auto-rotate testimonials
+  let tIdx = 0;
+  setInterval(() => { tIdx = (tIdx + 1) % 3; showTestimonial(tIdx); }, 5000);
+
+  // Contact submit
+  function handleSubmit() {
+    const btn = document.querySelector('.contact-submit');
+    btn.textContent = 'Message Sent ✓';
+    btn.style.background = '#4A7A5A';
+    setTimeout(() => { btn.textContent = 'Send Message →'; btn.style.background = ''; }, 3000);
+  }
+</script>
+</body>
+</html>
